@@ -1,0 +1,41 @@
+#!/bin/bash
+
+load inquirer
+
+check() {
+  if [ ! -f $SERVICE_CONFIG ]; then
+     touch $SERVICE_CONFIG
+  fi
+  config::load_file $SERVICE_CONFIG
+
+  if [ -z "$SERVICE_VSCODE_DOMAIN" ]; then
+    inquirer::text "请输入 SERVICE_VSCODE_DOMAIN:" value
+    config::set SERVICE_VSCODE_DOMAIN $value $SERVICE_CONFIG
+  fi
+
+  if [ -z "$SERVICE_VSCODE_DOREAMON_CLIENT_ID" ]; then
+    inquirer::text "请输入 SERVICE_VSCODE_DOREAMON_CLIENT_ID:" value
+    config::set SERVICE_VSCODE_DOREAMON_CLIENT_ID $value $SERVICE_CONFIG
+  fi
+
+  if [ -z "$SERVICE_VSCODE_DOREAMON_CLIENT_SECRET" ]; then
+    inquirer::text "请输入 SERVICE_VSCODE_DOREAMON_CLIENT_SECRET:" value
+    config::set SERVICE_VSCODE_DOREAMON_CLIENT_SECRET $value $SERVICE_CONFIG
+  fi
+
+  if [ -z "$SERVICE_VSCODE_ALLOW_USERNAMES" ]; then
+    inquirer::text "请输入 SERVICE_VSCODE_ALLOW_USERNAMES:" value
+    config::set SERVICE_VSCODE_ALLOW_USERNAMES $value $SERVICE_CONFIG
+  fi
+  
+  # load again
+  config::load_file $SERVICE_CONFIG
+  
+  # @TODO
+  export SERVICE_VSCODE_DOMAIN=$SERVICE_VSCODE_DOMAIN
+  export SERVICE_VSCODE_DOREAMON_CLIENT_ID=$SERVICE_VSCODE_DOREAMON_CLIENT_ID
+  export SERVICE_VSCODE_DOREAMON_CLIENT_SECRET=$SERVICE_VSCODE_DOREAMON_CLIENT_SECRET
+  export SERVICE_VSCODE_ALLOW_USERNAMES=$SERVICE_VSCODE_ALLOW_USERNAMES
+}
+
+check $@
