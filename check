@@ -27,6 +27,14 @@ check() {
     inquirer::text "请输入 SERVICE_VSCODE_ALLOW_USERNAMES:" value
     config::set SERVICE_VSCODE_ALLOW_USERNAMES $value $SERVICE_CONFIG
   fi
+
+  # Fix code server permission on ~/.config => host: ${SERVICE_DATA}/vscode/config
+  if [ ! -d "${SERVICE_DATA}/vscode" ]; then
+    mkdir ${SERVICE_DATA}/vscode
+  fi
+  if [ "$(stat -c "%a" ${SERVICE_DATA}/vscode)" != "1777" ]; then
+    sudo chmod 1777 ${SERVICE_DATA}/vscode
+  fi
   
   # load again
   config::load_file $SERVICE_CONFIG
