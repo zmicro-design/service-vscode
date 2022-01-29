@@ -15,7 +15,7 @@ services:
       - vscode-service
 
   vscode-service:
-    image: codercom/code-server:${SERVICE_VSCODE_VERSION}
+    image: whatwewant/code-server:${SERVICE_VSCODE_VERSION}
     volumes:
       # iisue: invalid mount config for type "bind": bind source path does not exist
       # If you bind mount a host path into your service’s containers, the path must exist on every swarm node.
