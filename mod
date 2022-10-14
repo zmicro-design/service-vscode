@@ -1,3 +1,3 @@
 NAME=vscode
-VERSION=v0.0.6
+VERSION=v1.0.0
 DESCRIPTION="VSCode Service"
