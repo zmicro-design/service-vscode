@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+  vscode:
+    restart: always
+    image: whatwewant/openresty-oauth2.0:${SERVICE_VSCODE_OAUTH_VERSION}
+    environment:
+      PROXY_PASS: http://vscode-service:8080
+      ROOT_URL: https://${SERVICE_VSCODE_DOMAIN}
+      PROVIDER: doreamon
+      CLIENT_ID: ${SERVICE_VSCODE_DOREAMON_CLIENT_ID}
+      CLIENT_SECRET: ${SERVICE_VSCODE_DOREAMON_CLIENT_SECRET}
+      ALLOW_USERNAMES: ${SERVICE_VSCODE_ALLOW_USERNAMES}
+    depends_on:
+      - vscode-service
+
+  vscode-service:
+    image: whatwewant/code-server:${SERVICE_VSCODE_VERSION}
+    volumes:
+      # iisue: invalid mount config for type "bind": bind source path does not exist
+      # If you bind mount a host path into your service’s containers, the path must exist on every swarm node.
+      # reference: https://stackoverflow.com/questions/48971065/getting-invalid-mount-config-for-type-bind-bind-source-path-does-not-exist-in
+      #
+      - ${SERVICE_DATA}/vscode/projects:/home/coder/code-server
+      - ${SERVICE_DATA}/vscode/config:/home/coder/.config
+    command: code-server --auth none --extensions-dir /home/coder/.config/extensions
+    # user should set or donot have permission on projects directory
+    # user: "0:0"
+    # user: root
+
+networks:
+  default:
+    external: true
+    name: compose-ingress
