@@ -4,7 +4,7 @@ load inquirer
 
 check() {
   if [ ! -f $SERVICE_CONFIG ]; then
-     touch $SERVICE_CONFIG
+    touch $SERVICE_CONFIG
   fi
   config::load_file $SERVICE_CONFIG
 
@@ -32,13 +32,15 @@ check() {
   if [ ! -d "${SERVICE_DATA}/vscode" ]; then
     mkdir ${SERVICE_DATA}/vscode
   fi
-  if [ "$(stat -c "%a" ${SERVICE_DATA}/vscode)" != "1777" ]; then
-    sudo chmod 1777 ${SERVICE_DATA}/vscode
-  fi
-  
+  # if [ "$(stat -c "%a" ${SERVICE_DATA}/vscode)" != "1777" ]; then
+  #   sudo chmod 1777 ${SERVICE_DATA}/vscode
+  # fi
+  # @TODO fix user permission error on first access
+  sudo chown -R 1000:1000 ${SERVICE_DATA}
+
   # load again
   config::load_file $SERVICE_CONFIG
-  
+
   # @TODO
   export SERVICE_VSCODE_DOMAIN=$SERVICE_VSCODE_DOMAIN
   export SERVICE_VSCODE_DOREAMON_CLIENT_ID=$SERVICE_VSCODE_DOREAMON_CLIENT_ID
